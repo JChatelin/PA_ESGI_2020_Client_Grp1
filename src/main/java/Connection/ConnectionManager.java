@@ -2,6 +2,7 @@ package Connection;
 
 
 
+import Exceptions.ConnectionFailedException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,8 +29,8 @@ public class ConnectionManager {
     public String Connect() throws Exception{
         System.out.println("Connecting to server...");
         String token = "";
-        String params = "?email=su2@local.me&password=0000";
-        URL url = new URL("http://localhost:8000/api/login" + params);
+        String params = "?email="+ username +"&password" + password;
+        URL url = new URL(connectURL + params);
         HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
         connexion.setRequestMethod("POST");
         connexion.setConnectTimeout(5000);
@@ -51,8 +52,8 @@ public class ConnectionManager {
             token = (String) jsonrespons.get("token");
             return token;
         }else{
-            System.out.println("Connexion error");
-            return "CONNECTIONFAILED";
+            throw new ConnectionFailedException("Connexion error ! " +
+                    "please check the provided properties and restart the client.");
         }
 
     }
